@@ -21,7 +21,25 @@ export const getPostsBySearch = async (req, res) => {
 
     try {
         const titleOrMessageString = new RegExp(searchQuery, 'i');
+        console.log(searchQuery)
+        console.log(titleOrMessageString)
         const posts = await PostMessage.find({ $or: [ { title: { $regex: titleOrMessageString } }, { message: { $regex: titleOrMessageString } }, { tags: { $in: tags.split(',') } } ] });
+
+        res.send({ data: posts });
+    } catch (error) {
+        res.status(404).send({ message: error.message })
+    }
+}
+
+export const getPostsByAuthor = async (req, res) => {
+    const { searchAuthor } = req.query;
+
+    try {
+        const authorString = new RegExp(searchAuthor, 'i');
+        console.log(req.query)
+        console.log(searchAuthor)
+        console.log(authorString)
+        const posts = await PostMessage.find({ name: { $regex: authorString } });
 
         res.send({ data: posts });
     } catch (error) {
