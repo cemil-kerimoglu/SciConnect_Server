@@ -17,6 +17,7 @@ export const getPosts = async (req, res) => {
 } 
 
 export const getPostsBySearch = async (req, res) => {
+    console.log(req);
     const { searchQuery, tags } = req.query;
 
     try {
@@ -33,12 +34,13 @@ export const getPostsBySearch = async (req, res) => {
 
 export const getPostsByAuthor = async (req, res) => {
     const { searchAuthor } = req.query;
+    // console.log("author name:", searchAuthor);
+    console.log(req.query);
 
     try {
         const authorString = new RegExp(searchAuthor, 'i');
-        console.log(req.query)
-        console.log(searchAuthor)
-        console.log(authorString)
+        // console.log(searchAuthor)
+        // console.log(authorString)
         const posts = await PostMessage.find({ name: { $regex: authorString } });
 
         res.send({ data: posts });
