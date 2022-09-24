@@ -94,12 +94,10 @@ export const deletePost = async (req, res) => {
 export const likePost = async (req, res) => {
     const { id: _id } = req.params;
 
-    if(!req.userId) return res.send({ message: 'User unauthenticated!'});
-    
+    if(!req.userId) return res.send({ message: 'User unauthenticated!'});  
     if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send('The document does not exist!');
 
     const post = await PostMessage.findById(_id);
-
     const index = post.likes.findIndex((_id) => _id === String(req.userId));
 
     if(index === -1) {
@@ -108,7 +106,17 @@ export const likePost = async (req, res) => {
         post.likes = post.likes.filter((_id) => _id !== String(req.userId));
     }
 
-
     const updatedPost = await PostMessage.findByIdAndUpdate(_id, post, { new: true });
+    res.send(updatedPost);
+}
+
+export const commentPost = async (req, res) => {
+    const { id } = req.params;
+    const { value } = req.body;
+
+    const post = await PostMessage.findById(id);
+    post.comments.push(value);
+
+    const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true });
     res.send(updatedPost);
 }
