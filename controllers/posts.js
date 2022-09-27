@@ -28,15 +28,14 @@ export const getPosts = async (req, res) => {
 } 
 
 export const getPostsBySearch = async (req, res) => {
-    console.log(req);
     const { searchQuery, tags } = req.query;
+    console.log(searchQuery)
+    console.log(tags)
+    console.log(tags.split(','))
 
     try {
         const titleOrMessageString = new RegExp(searchQuery, 'i');
-        console.log(searchQuery)
-        console.log(titleOrMessageString)
         const posts = await PostMessage.find({ $or: [ { title: { $regex: titleOrMessageString } }, { message: { $regex: titleOrMessageString } }, { tags: { $in: tags.split(',') } } ] });
-
         res.send({ data: posts });
     } catch (error) {
         res.status(404).send({ message: error.message })
@@ -45,13 +44,9 @@ export const getPostsBySearch = async (req, res) => {
 
 export const getPostsByAuthor = async (req, res) => {
     const { searchAuthor } = req.query;
-    // console.log("author name:", searchAuthor);
-    console.log(req.query);
 
     try {
         const authorString = new RegExp(searchAuthor, 'i');
-        // console.log(searchAuthor)
-        // console.log(authorString)
         const posts = await PostMessage.find({ name: { $regex: authorString } });
 
         res.send({ data: posts });
@@ -62,8 +57,8 @@ export const getPostsByAuthor = async (req, res) => {
 
 export const createPost = async (req, res) => {
     const post = req.body;
-    const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString() });
-    
+    const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString(), selectedFile: req?.file?.location });
+    console.log(req.file)
     try {
        await newPost.save();
        res.status(201).send(newPost); 
