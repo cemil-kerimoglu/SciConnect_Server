@@ -13,6 +13,7 @@ export const getPost = async (req, res) => {
 }
 
 export const getPosts = async (req, res) => {
+    console.log("backend, getPosts")
     const { page } = req.query;
 
     try {
