@@ -13,9 +13,7 @@ export const getPost = async (req, res) => {
 }
 
 export const getPosts = async (req, res) => {
-    console.log("backend, getPosts")
     const { page } = req.query;
-
     try {
         const limit = 6;
         const startIndex = (Number(page) - 1) * limit;
@@ -30,9 +28,6 @@ export const getPosts = async (req, res) => {
 
 export const getPostsBySearch = async (req, res) => {
     const { searchQuery, tags } = req.query;
-    console.log(searchQuery)
-    console.log(tags)
-    console.log(tags.split(','))
 
     try {
         const titleOrMessageString = new RegExp(searchQuery, 'i');
@@ -59,7 +54,6 @@ export const getPostsByAuthor = async (req, res) => {
 export const createPost = async (req, res) => {
     const post = req.body;
     const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString(), selectedFile: req?.file?.location });
-    console.log(req.file)
     try {
        await newPost.save();
        res.status(201).send(newPost); 
