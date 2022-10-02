@@ -54,6 +54,7 @@ export const getPostsByAuthor = async (req, res) => {
 export const createPost = async (req, res) => {
     const post = req.body;
     const newPost = new PostMessage({ ...post, creator: req.userId, createdAt: new Date().toISOString(), selectedFile: req?.file?.location });
+    
     try {
        await newPost.save();
        res.status(201).send(newPost); 
