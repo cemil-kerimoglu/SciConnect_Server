@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import PostMessage from '../models/postMessage.js';
-import Comment from '../models/Comment.js';
+import Comment from '../models/comment.js';
 
 export const getPost = async (req, res) => {
     const { id: _id } = req.params;
