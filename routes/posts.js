@@ -1,5 +1,5 @@
 import express from "express";
-import { getPosts, getPost, getPostsBySearch, getPostsByAuthor, createPost, updatePost, deletePost, likePost, commentPost } from "../controllers/posts.js";
+import { getPosts, getPost, getPostsBySearch, getPostsByAuthor, createPost, updatePost, deletePost, likePost, commentPost, deleteComment, likeComment } from "../controllers/posts.js";
 import auth from '../middleware/auth.js';
 import { upload } from '../services/fileUpload.js';
 
@@ -12,7 +12,9 @@ router.get('/search/author', getPostsByAuthor);
 router.post('/', auth, upload.single("selectedFile"), createPost);
 router.patch('/:id', auth, upload.single("selectedFile"), updatePost);
 router.delete('/:id', auth, deletePost);
-router.patch('/:id/likePost', auth, likePost)
-router.post('/:id/commentPost', auth, commentPost)
+router.patch('/:id/likePost', auth, likePost);
+router.post('/:id/commentPost', auth, commentPost);
+router.delete('/:id/comments/:commentId', auth, deleteComment);
+router.patch('/:id/comments/:commentId', auth, likeComment);
 
 export default router;
