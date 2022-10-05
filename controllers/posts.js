@@ -108,10 +108,6 @@ export const commentPost = async (req, res) => {
 
     const newComment = await Comment.create({ content: comment, writtenBy: req.userId, createdAt: new Date().toISOString() });
     const updatedPost = await PostMessage.findByIdAndUpdate(id, { $push: { comments: newComment._id } }, { new: true }).populate('comments');
-    console.log(await PostMessage.find().populate('comments'))
-    // post.comments.push(newComment);
-    // const updatedPost = await PostMessage.findByIdAndUpdate(id, post, { new: true }).populate('comments');
-    console.log(updatedPost);
     res.status(200).send(updatedPost);
 }
 
@@ -137,15 +133,23 @@ export const likeComment = async (req, res) => {
     const { id, commentId } = req.params;
 
     try {
-        const updatedComment = await Comment.findByIdAndUpdate(commentId, { $push: { likes: req.userId } }, { new: true } );
-        const post = await PostMessage.findById(id);
+        const comment = await Comment.findById(commentId);
+        const index = comment.likes.findIndex((user) => user === String(req.userId));
+        let updatedComment;
 
+        if(index === -1) {
+            updatedComment = await Comment.findByIdAndUpdate(commentId, { $push: { likes: req.userId } }, { new: true } );
+        } else {
+            updatedComment = await Comment.findByIdAndUpdate(commentId, { $pull: { likes: req.userId } }, { new: true } );
+        }
+
+        const post = await PostMessage.findById(id);
         const updatedComments = post.comments.map((comment) => {
-                if(comment._id === commentId) {
-                    return updatedComment;
-                }
-                return comment;
-            })
+            if(comment._id === commentId) {
+                return updatedComment;
+            }
+            return comment;
+        })
 
         const updatedPost = await PostMessage.findByIdAndUpdate(id, {...post, comments: updatedComments }, { new: true }).populate('comments');
         res.status(200).send(updatedPost);
