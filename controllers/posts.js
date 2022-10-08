@@ -123,7 +123,6 @@ export const deleteComment = async (req, res) => {
     
         res.send("Success");
       } catch (err) {
-        console.log(err);
         res.status(500).send("Something went wrong");
       }
 

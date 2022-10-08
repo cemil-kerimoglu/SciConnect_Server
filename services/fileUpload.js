@@ -17,7 +17,6 @@ const fileFilter = (req, file, cb) => {
       cb(new Error("Invalid file type, only PDF, JPEG and PNG is allowed!"), false);
     }
 };
-console.log(process.env.S3_BUCKET_NAME);
 
 export const upload = multer({
     fileFilter,
@@ -41,8 +40,6 @@ import multerS3 from "multer-s3";
 import aws from "aws-sdk";
 
 const { AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_REGION } = process.env;
-console.log(process.env);
-console.log(AWS_REGION, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY);
 
 aws.config.update({
   secretAccessKey: AWS_SECRET_ACCESS_KEY,
@@ -69,7 +66,6 @@ const storage = multerS3({
   contentLength: 5000000000,
   acl: "public-read",
   metadata: (req, file, cb) => {
-    console.log(file)
     cb(null, { fieldName: file.fieldname });
   },
   key: function (req, file, cb) {
